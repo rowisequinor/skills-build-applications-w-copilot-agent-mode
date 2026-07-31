@@ -1,9 +1,12 @@
 import { Router } from 'express';
+import Team from '../models/Team';
 
 const router = Router();
 
-router.get('/', (_req, res) => {
-  res.json({ teams: [] });
+router.get('/', async (_req, res) => {
+  const teams = await Team.find().sort({ name: 1 }).lean();
+
+  res.json({ teams });
 });
 
 export default router;
