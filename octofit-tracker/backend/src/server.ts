@@ -1,6 +1,5 @@
 import express from 'express';
 import './config/database';
-import { getApiBaseUrl } from './config/apiUrl';
 import activitiesRouter from './routes/activities';
 import leaderboardRouter from './routes/leaderboard';
 import teamsRouter from './routes/teams';
@@ -9,9 +8,16 @@ import workoutsRouter from './routes/workouts';
 
 const app = express();
 const port = Number(process.env.PORT) || 8000;
-const apiBaseUrl = getApiBaseUrl(port);
+const codespaceName = process.env.CODESPACE_NAME;
+const apiBaseUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : `http://localhost:${port}`;
 
 app.use(express.json());
+
+app.get('/', (_req, res) => {
+  res.json({ service: 'octofit-backend', apiBaseUrl });
+});
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', service: 'octofit-backend', port, apiBaseUrl });
