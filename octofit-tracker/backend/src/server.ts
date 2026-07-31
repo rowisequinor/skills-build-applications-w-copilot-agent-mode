@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import './config/database';
 import activitiesRouter from './routes/activities';
@@ -13,6 +14,7 @@ const apiBaseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
   : `http://localhost:${port}`;
 
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (_req, res) => {
