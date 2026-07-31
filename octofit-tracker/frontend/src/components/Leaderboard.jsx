@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection, getEndpointUrl } from '../api.js'
+import { fetchCollection } from '../api.js'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+const leaderboardEndpoint = codespaceName
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  : 'http://localhost:8000/api/leaderboard/'
 
 function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([])
@@ -9,7 +14,7 @@ function Leaderboard() {
   useEffect(() => {
     let ignore = false
 
-    fetchCollection('leaderboard')
+    fetchCollection('leaderboard', leaderboardEndpoint)
       .then((items) => {
         if (!ignore) {
           setLeaderboard(items)
@@ -35,7 +40,7 @@ function Leaderboard() {
           <p className="eyebrow">Competition</p>
           <h2>Leaderboard</h2>
         </div>
-        <code>{getEndpointUrl('leaderboard')}</code>
+        <code>{leaderboardEndpoint}</code>
       </div>
 
       {status === 'loading' && <p className="muted">Loading leaderboard...</p>}

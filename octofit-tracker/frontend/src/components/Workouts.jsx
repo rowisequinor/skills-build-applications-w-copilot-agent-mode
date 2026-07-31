@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection, getEndpointUrl } from '../api.js'
+import { fetchCollection } from '../api.js'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+const workoutsEndpoint = codespaceName
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts/`
+  : 'http://localhost:8000/api/workouts/'
 
 function Workouts() {
   const [workouts, setWorkouts] = useState([])
@@ -9,7 +14,7 @@ function Workouts() {
   useEffect(() => {
     let ignore = false
 
-    fetchCollection('workouts')
+    fetchCollection('workouts', workoutsEndpoint)
       .then((items) => {
         if (!ignore) {
           setWorkouts(items)
@@ -35,7 +40,7 @@ function Workouts() {
           <p className="eyebrow">Suggestions</p>
           <h2>Workouts</h2>
         </div>
-        <code>{getEndpointUrl('workouts')}</code>
+        <code>{workoutsEndpoint}</code>
       </div>
 
       {status === 'loading' && <p className="muted">Loading workouts...</p>}

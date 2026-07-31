@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection, getEndpointUrl } from '../api.js'
+import { fetchCollection } from '../api.js'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+const usersEndpoint = codespaceName
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users/`
+  : 'http://localhost:8000/api/users/'
 
 function Users() {
   const [users, setUsers] = useState([])
@@ -9,7 +14,7 @@ function Users() {
   useEffect(() => {
     let ignore = false
 
-    fetchCollection('users')
+    fetchCollection('users', usersEndpoint)
       .then((items) => {
         if (!ignore) {
           setUsers(items)
@@ -35,7 +40,7 @@ function Users() {
           <p className="eyebrow">Roster</p>
           <h2>Users</h2>
         </div>
-        <code>{getEndpointUrl('users')}</code>
+        <code>{usersEndpoint}</code>
       </div>
 
       {status === 'loading' && <p className="muted">Loading users...</p>}

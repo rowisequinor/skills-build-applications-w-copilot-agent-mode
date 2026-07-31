@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection, getEndpointUrl } from '../api.js'
+import { fetchCollection } from '../api.js'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+const activitiesEndpoint = codespaceName
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/activities/`
+  : 'http://localhost:8000/api/activities/'
 
 function Activities() {
   const [activities, setActivities] = useState([])
@@ -9,7 +14,7 @@ function Activities() {
   useEffect(() => {
     let ignore = false
 
-    fetchCollection('activities')
+    fetchCollection('activities', activitiesEndpoint)
       .then((items) => {
         if (!ignore) {
           setActivities(items)
@@ -35,7 +40,7 @@ function Activities() {
           <p className="eyebrow">Activity log</p>
           <h2>Activities</h2>
         </div>
-        <code>{getEndpointUrl('activities')}</code>
+        <code>{activitiesEndpoint}</code>
       </div>
 
       {status === 'loading' && <p className="muted">Loading activities...</p>}
